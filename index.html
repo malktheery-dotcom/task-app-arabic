@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مهامي | إدارة المهام اليومية</title>
+  
+  <!-- خط Cairo العصري من Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- مكتبة أيقونات Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- ملف التنسيقات الخارجية -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- شريط الرأس (Header) -->
+    <header class="app-header">
+      <div class="header-main">
+        <div class="logo-area">
+          <div class="logo-icon">
+            <i class="fa-solid fa-list-check"></i>
+          </div>
+          <div>
+            <h1 class="app-title">مفكرة المهام</h1>
+            <p class="app-subtitle" id="current-date">--:--</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button id="theme-toggle-btn" class="icon-btn" title="تبديل المظهر">
+            <i class="fa-solid fa-sun" id="theme-icon"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- إحصائيات وإنجاز المهام -->
+      <div class="stats-card">
+        <div class="stat-item">
+          <span class="stat-number" id="total-count">0</span>
+          <span class="stat-label">الإجمالي</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number text-warning" id="pending-count">0</span>
+          <span class="stat-label">قيد الانتظار</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number text-success" id="completed-count">0</span>
+          <span class="stat-label">مكتملة</span>
+        </div>
+      </div>
+
+      <!-- شريط نسبة الإنجاز -->
+      <div class="progress-section">
+        <div class="progress-header">
+          <span>نسبة الإنجاز</span>
+          <span id="progress-percent">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- قسم إدخال مهمة جديدة -->
+    <section class="task-form-container">
+      <form id="task-form" class="task-form">
+        <div class="input-wrapper">
+          <input 
+            type="text" 
+            id="task-input" 
+            placeholder="ما الذي تود إنجازه اليوم؟" 
+            autocomplete="off" 
+            maxlength="150"
+            required
+          >
+          <div class="priority-select-wrapper">
+            <select id="priority-select" title="مستوى الأولوية">
+              <option value="high">🔴 أولوية عالية</option>
+              <option value="medium" selected>🟡 أولوية متوسطة</option>
+              <option value="low">🟢 أولوية منخفضة</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="add-task-btn" id="add-btn">
+          <i class="fa-solid fa-plus"></i>
+          <span>إضافة مهمة</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- شريط التصفية والبحث (Filters & Search) -->
+    <section class="controls-section">
+      <div class="filter-tabs">
+        <button class="filter-tab active" data-filter="all">الكل</button>
+        <button class="filter-tab" data-filter="pending">قيد التنفيذ</button>
+        <button class="filter-tab" data-filter="completed">المكتملة</button>
+      </div>
+
+      <div class="extra-actions">
+        <button id="clear-completed-btn" class="text-btn danger-hover" title="حذف كل المهام المكتملة">
+          <i class="fa-regular fa-trash-can"></i>
+          <span>مسح المكتملة</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- قائمة المهام (Task List) مع شريط البحث الفوري -->
+    <main class="tasks-main">
+      <!-- شريط البحث الفوري -->
+      <div class="search-section">
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input 
+            type="text" 
+            id="search-input" 
+            placeholder="بحث فوري في المهام..." 
+            autocomplete="off"
+            aria-label="بحث في المهام"
+          >
+          <button type="button" id="clear-search-btn" class="clear-search-btn hidden" title="إلغاء البحث">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div id="search-badge" class="search-badge hidden">
+          <span id="search-count">0</span> نتيجة
+        </div>
+      </div>
+
+      <ul id="task-list" class="task-list" aria-live="polite">
+        <!-- يتم توليد عناصر المهام ديناميكياً بواسطة JavaScript -->
+      </ul>
+
+      <!-- الحالة الفارغة (Empty State) -->
+      <div id="empty-state" class="empty-state hidden">
+        <div class="empty-icon">
+          <i class="fa-regular fa-calendar-check"></i>
+        </div>
+        <h3 id="empty-title">لا توجد مهام حالياً</h3>
+        <p id="empty-desc">أضف مهمتك الأولى لتنظيم يومك وزيادة إنتاجيتك!</p>
+      </div>
+    </main>
+
+    <!-- تذييل الصفحة -->
+    <footer class="app-footer">
+      <p>يتم حفظ جميع المهام تلقائياً على جهازك محلياً</p>
+    </footer>
+
+  </div>
+
+  <!-- حاوية إشعارات التنبيه (Toast Notifications) -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ملف الجافاسكريبت -->
+  <script src="script.js"></script>
+</body>
+</html>
